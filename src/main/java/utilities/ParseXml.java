@@ -64,4 +64,12 @@ public class ParseXml {
             io.printStackTrace();
         }
     }
+    
+    private static String replaceXmlKeys(String xml) {
+        String xmlData = xml;
+        xmlData = xmlData.replace("id", "patientid");
+        xmlData = xmlData.replace("gender", "sex");
+        xmlData = xmlData.replace("dateOfBirth", "age");
+        return xmlData;
+    }
 }

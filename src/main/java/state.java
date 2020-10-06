@@ -1,4 +1,4 @@
-public enum State {
+public enum state {
 
     AK("AK", "Alaska"),
     AL("AL", "Alabama"),
@@ -54,8 +54,9 @@ public enum State {
     private final String key;
     private final String value;
 
-    State(String key, String value) {
+    state(String key, String value) {
         this.key = key;
         this.value = value;
     }
+
 }

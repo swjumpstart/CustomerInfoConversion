@@ -1,18 +1,21 @@
 package utilities;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.sun.xml.internal.bind.v2.runtime.XMLSerializer;
 import org.json.JSONObject;
 import org.json.XML;
+
+import static utilities.ModifyXMLFile.modifyXmlFile;
 
 
 public class ParseXml {
@@ -33,22 +36,46 @@ public class ParseXml {
             }
 
             String xml = sb.toString();
-            //System.out.println("Printing XML:  ");
-            //System.out.println(xml);
-            String xmlData = replaceXmlKeys(xml);
-            //System.out.println("Printing XMLData:  ");
-            //System.out.println(xmlData);
+            //replace node names
+            String xmlString = replaceXmlKeys(xml);
+
+            String xmlData = xmlString.substring(xmlString.indexOf("?>")+2);
+            System.out.println("Printing XMLData:  ");
+            System.out.println(xmlData);
+
+            //write this out to a new file
+            File xmlfile = new File ("updatePatientXml.xml");
+            FileOutputStream fos = new FileOutputStream(xmlfile);
+            if (xmlfile.exists() && !xmlfile.isDirectory()){
+                xmlfile.delete();
+            }
+            byte [] contentInBytes = xmlString.getBytes();
+            fos.write(contentInBytes);
+            fos.flush();
+            fos.close();
+
+            //modify the nodes within the document
+            modifyXmlFile(xmlfile.getAbsolutePath());
 
             XmlMapper xmlMapper = new XmlMapper();
             JsonNode node = xmlMapper.readTree(xmlData.getBytes());
+
+            System.out.println("this is the JSON:  "  + node);
+
             ObjectMapper jsonMapper = new ObjectMapper();
+            JsonNode jsonNodeRoot = jsonMapper.readTree(node.toPrettyString());
+            System.out.println("HERE IS THE jsonNodeRoot!!!!");
+            System.out.println(jsonNodeRoot.asText());
+            JsonNode jsonNodeSex = jsonNodeRoot.get("sex");
+            String gender = jsonNodeSex.asText();
+            System.out.println("HERE IS THE gender!!!!");
+            System.out.println(gender);
+
             String json = jsonMapper.writeValueAsString(node);
-            //System.out.println("HERE IS THE jackson JSON!!!!");
-            //System.out.println(json);
 
+            System.out.println("HERE IS THE jackson JSON!!!!");
+            System.out.println(json);
 
-
-            JSONObject jsonObj = XML.toJSONObject(json);
             //String jsonString = jsonObj.toString();
 
             //jsonObj.get("sex");
@@ -62,13 +89,14 @@ public class ParseXml {
            // System.out.println(jsonObj.toString());
             //System.out.println(jsonObj.toString().split(",").length);
 
-            Path path = Paths.get(patientJsonFile);
-            Files.deleteIfExists(path);
-            System.out.println("Printing JSON Object:  ");
-            System.out.println(path.toString());
-            Path filePath = Files.createFile(path);
-
-            Files.write(filePath, jsonObj.toString().getBytes());
+//            JSONObject jsonObj = XML.toJSONObject(json);
+//            Path path = Paths.get(patientJsonFile);
+//            Files.deleteIfExists(path);
+//            System.out.println("Printing JSON Object:  ");
+//            System.out.println(path.toString());
+//            Path filePath = Files.createFile(path);
+//
+//            Files.write(filePath, jsonObj.toString().getBytes());
 
 //            FileWriter fileWriter = new FileWriter(filePath.toFile());
 
@@ -82,8 +110,8 @@ public class ParseXml {
 //
 //            bufferedWriter.close();
         } catch (IOException io) {
-            System.out.println("Error writing to file " + patientJsonFile);
-            io.printStackTrace();
+//            System.out.println("Error writing to file " + patientJsonFile);
+//            io.printStackTrace();
         }
     }
 

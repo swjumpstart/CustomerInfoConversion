@@ -37,7 +37,7 @@ public class ParseXml {
             System.out.println(xmlData);
 
             JSONObject jsonObj = XML.toJSONObject(xmlData);
-            jsonObj.get("sex");
+            //jsonObj.get("sex");
 
             //use a getter and setter to replace state
             //use a getter and setter to replace sex
@@ -64,7 +64,7 @@ public class ParseXml {
             io.printStackTrace();
         }
     }
-    
+
     private static String replaceXmlKeys(String xml) {
         String xmlData = xml;
         xmlData = xmlData.replace("id", "patientid");

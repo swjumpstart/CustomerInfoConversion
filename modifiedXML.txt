@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><patients>
+    <patient>
+        <patientid>1234</patientid>
+        <sex>male</sex>
+        <name>John Smith</name>
+        <state>Michigan</state>
+        <age>03/04/1962</age>
+    </patient>
+    <patient>
+        <patientid>5678</patientid>
+        <sex>female</sex>
+        <name>Jane Smith</name>
+        <state>Ohio</state>
+        <age>08/24/1971</age>
+    </patient>
+</patients>

@@ -1,6 +1,13 @@
 package utilities;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import org.json.JSONObject;
+import org.json.XML;
 
 
 public class ParseXml {
@@ -11,7 +18,7 @@ public class ParseXml {
             InputStream inputStream = null;
             try {
                 inputStream = new FileInputStream(file);
-            } catch (FileNotFoundException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
             StringBuilder sb = new StringBuilder();
